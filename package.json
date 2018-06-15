@@ -1,7 +1,7 @@
 {
-  "name": "vue-template",
+  "name": "{{ name }}",
   "version": "1.0.0",
-  "description": "A Vue.js template",
+  "description": "{{ description }}",
   "author": "Ben <xuedengheng@outlook.com>",
   "private": true,
   "scripts": {
@@ -45,6 +45,7 @@
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.7.1",
+    "eslint-plugin-html": "^4.0.3",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.2.0",
     "eslint-plugin-promise": "^3.4.0",
