@@ -1,6 +1,6 @@
-# vue-template
+# {{ project }}
 
-> A Vue.js template
+> {{ description }}
 
 ## Build Setup
 
