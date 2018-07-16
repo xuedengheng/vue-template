@@ -9,7 +9,7 @@ const ERR_OK = 0
 const ERR_NO = -404
 
 const http = axios.create({
-  baseURL: baseUrl,
+  baseURL: baseUrl.api,
   timeout: TIME_OUT,
   headers: COMMON_HEADER
 })
