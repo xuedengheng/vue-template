@@ -13,8 +13,8 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-const env = process.env.NODE_ENV === 'production' ? require('../config/prod.env') :
-  process.env.NODE_ENV === 'test' ? require('../config/test.env') : require('../config/dev.env')
+const env = process.env.BUILD_ENV === 'production' ? require('../config/prod.env') :
+  process.env.BUILD_ENV === 'test' ? require('../config/test.env') : require('../config/dev.env')
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
