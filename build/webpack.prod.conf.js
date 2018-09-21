@@ -56,7 +56,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
         ? { safe: true, map: { inline: false } }
-        : { safe: true }
+        : { safe: true, autoprefixer: { remove: false }  }
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
