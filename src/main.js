@@ -4,16 +4,15 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import 'common/stylus/index.styl'
-import fastclick from 'fastclick'
 import store from './store'
-
-fastclick.attach(document.body)
+import './utils/app-plugins'
+import './utils/env-clear'
 
 /* eslint-disable no-new */
-new Vue({
+export default new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

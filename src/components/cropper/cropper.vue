@@ -1,0 +1,95 @@
+<template>
+  <div class="img-cut" v-show="visible">
+    <vueCropper
+      class="img-big"
+      ref="myCropper"
+      :viewMode="1"
+      :guides="false"
+      :rotatable="true"
+      :background="status"
+      :cropBoxResizable="status"
+      :aspectRatio="aspect"
+      :autoCropArea="1"
+      :dragMode="'move'"
+      :checkCrossOrigin="false"
+      :cropBoxMovable="false"
+      :img="img"
+    >
+    </vueCropper>
+    <div class="img-btn">
+      <div class="btn-item" @click="confirm">确定</div>
+      <div class="btn-item" @click="cancel">取消</div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import VueCropper from 'vue-cropperjs'
+
+  export default {
+    props: {
+      aspect: {
+        type: Number,
+        default: 4 / 3
+      }
+    },
+    components: {
+      VueCropper
+    },
+    data() {
+      return {
+        visible: false,
+        status: false,
+        img: ''
+      }
+    },
+    methods: {
+      show(imgUrl) {
+        this.visible = true
+        let img = this.$handle.getObjectURL(imgUrl)
+        this.img = img
+        this.$refs.myCropper.replace(img)
+      },
+      confirm() {
+        let src = this.$refs.myCropper.getCroppedCanvas().toDataURL('image/jpeg')
+        this.$emit('confirm', src)
+      },
+      cancel() {
+        this.visible = false
+      }
+    }
+  }
+</script>
+
+<style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable"
+  @import '~common/stylus/mixin'
+
+  .img-cut
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 500
+    background: #000
+    .img-big
+      background: #000
+      height: 100%
+    .img-btn
+      width: 100vw
+      position: absolute
+      bottom: 0
+      height: 60px
+      display: flex
+      align-items: center
+      background: #fff
+      border-top: 0.5px solid $color-col-line
+      .btn-item
+        flex: 1
+        text-align: center
+        font-size: 16px
+        color: #20202E
+        &:last-child
+          border-left: 0.5px solid $color-col-line
+</style>
