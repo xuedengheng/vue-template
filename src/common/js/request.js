@@ -1,7 +1,7 @@
 'use strict'
 
 import axios from 'axios'
-import {baseUrl} from './config'
+import {BASE_URL} from './config'
 import storage from 'storage-controller'
 import * as Utils from './request-utils'
 
