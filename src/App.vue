@@ -5,9 +5,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-export default {
-  name: 'App'
-}
+  import 'utils/app-plugins'
+
+  export default {
+    name: 'App'
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

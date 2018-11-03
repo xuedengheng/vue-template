@@ -102,28 +102,9 @@ export function getObjectURL(file) {
   return url
 }
 
-export function createFormData($Blob) {
+export function createFormData($Blob, type = 'image/jpeg') {
+  let imageExt = '.' + type.split('/')[1]
   let formData = new FormData()
-  formData.append('file', $Blob, 'file_' + Date.now() + '.jpeg')
+  formData.append('file', $Blob, 'file_' + Date.now() + imageExt)
   return formData
-}
-
-// **dataURL to blob**
-export function dataURLtoBlob(dataurl) {
-  let arr = dataurl.split(',')
-  let mime = arr[0].match(/:(.*?);/)[1]
-  let bstr = atob(arr[1])
-  let n = bstr.length
-  let u8arr = new Uint8Array(n)
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
-  }
-  return new Blob([u8arr], {type: mime})
-}
-
-// **blob to dataURL**
-export function blobToDataURL(blob, callback) {
-  let a = new FileReader()
-  a.onload = function (e) { callback(e.target.result) }
-  a.readAsDataURL(blob)
 }

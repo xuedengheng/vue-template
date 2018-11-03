@@ -14,15 +14,15 @@
     <hr>
     <h1>二维码</h1>
     <button @click="createQrCode">生成二维码</button>
+    <router-link tag="h1" to="/hello-world/other-pages">跳其他页面</router-link>
     <router-view-common></router-view-common>
   </div>
 </template>
 
 <script>
   import Cropper from 'components/cropper/cropper'
-  import { Upload, Global } from 'api'
+  import { Global } from 'api'
   import wx from 'weixin-js-sdk'
-  import qr from 'qr-image'
 
   export default {
     components: {
@@ -35,15 +35,21 @@
       }
     },
     created() {
-      this._getWxSdk()
+      this.$loading.show()
+      setTimeout(() => {
+        this.$loading.hide()
+      }, 1500)
+      // this._getWxSdk()
     },
     methods: {
       createQrCode() {
-        let buffer = qr.imageSync('http://www.google.com', {type: 'png'})
-        let blob = new Blob([buffer])
-        this.$handle.blobToDataURL(blob, b64 => {
-          this.testSrc = b64
-        })
+        let str = JSON.stringify({ 'code': 8297128291, 'store_id': 8 }) // todo
+        let img = this.$createQrCode.png(str) // png
+        // img = this.$createQrCode.svg(str) // svg
+        this.testSrc = img
+        // this.$createQrCode.pngAsync(str, pic => { // 异步 todo
+        //   this.testSrc = pic
+        // })
       },
       _getWxSdk() {
         let url = window.location.href
@@ -63,19 +69,29 @@
       },
       _fileChange(e, type) {
         let arr = Array.from(e.target.files)
+        if (arr.length <= 0) {
+          return
+        }
         switch (type) {
           case 'images' :
             this.$refs.cropper.show(arr[0])
             break
           case 'images-only' :
-            let file = new FormData()
-            file.append('file', arr[0], arr[0].name)
-            Upload.upLoadImage(file).then(res => {
+            this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, arr).then((resArr) => {
               this.$loading.hide()
-              if (res.error !== this.$ERR_OK) {
-                return this.$toast.show(res.message)
-              }
-              this.testSrc = res.data.url
+              let arr = []
+              resArr.map(item => {
+                if (item.error !== this.$ERR_OK) {
+                  return this.$toast.show(item.message)
+                }
+                let obj = {
+                  image_id: item.data.id,
+                  image_url: item.data.url,
+                  id: 0
+                }
+                arr.push(obj)
+              })
+              this.testSrc = arr[0].image_url
             })
             break
           case 'video' :
@@ -95,22 +111,30 @@
             break
         }
       },
-      cropperConfirm(e) {
+      async cropperConfirm(e) {
         this.$loading.show()
-        let blob = this.$handle.getBlobBydataURI(e)
-        let file = this.$handle.createFormData(blob)
-        Upload.upLoadImage(file).then(res => {
-          if (res.error !== this.$ERR_OK) {
-            return this.$toast.show(res.message)
-          }
-          this.testSrc = res.data.url
-          this.$loading.hide()
-          this.$refs.cropper.cancel()
-        })
+        let resArr = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [e.file])
+        let res = resArr[0]
+        if (res.error !== this.$ERR_OK) {
+          return this.$toast.show(res.message)
+        }
+        let obj = {
+          image_id: res.data.id,
+          image_url: res.data.url,
+          id: 0
+        }
+        this.testSrc = obj.image_url
+        this.$loading.hide()
+        this.$refs.cropper.cancel()
       }
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/variable"
+  @import '~common/stylus/mixin'
+  .demo
+    fill-box()
+      bottom: $tab-height
 </style>
